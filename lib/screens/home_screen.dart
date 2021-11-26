@@ -5,6 +5,8 @@ import 'package:foodapp/screens/restaurant_screen.dart';
 import 'package:foodapp/widgets/ratting_starts.dart';
 import 'package:foodapp/widgets/recent_orders.dart';
 
+import 'cart_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -15,84 +17,77 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   _buildRestaurants() {
-      List<Widget> restaurantList = [];
-      restaurants.forEach((Restaurant restaurant) {
-          restaurantList.add(
-            GestureDetector(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => RestaurantScreen(restaurant: restaurant)
+    List<Widget> restaurantList = [];
+    restaurants.forEach((Restaurant restaurant) {
+      restaurantList.add(GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => RestaurantScreen(restaurant: restaurant)),
+        ),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(width: 1.0, color: Colors.grey.shade200)),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Hero(
+                  tag: restaurant.imageUrl,
+                  child: Image(
+                    image: AssetImage(restaurant.imageUrl),
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
                   ),
-              ),
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    width: 1.0,
-                    color: Colors.grey.shade200
-                  )
                 ),
-                child: Row(
+              ),
+              Container(
+                margin: EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.0),
-                      child: Hero(
-                        tag: restaurant.imageUrl,
-                        child: Image(
-                          image: AssetImage(restaurant.imageUrl),
-                          width: 150,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    Text(
+                      restaurant.name,
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Container(
-                      margin: EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            restaurant.name,
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 4.0,),
-                          RattingStart(restaurant.rating),
-                          SizedBox(height: 4.0,),
-                          Text(
-                            restaurant.address,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          SizedBox(height: 4.0,),
-                          Text(
-                            '0.2 million',
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.bold
-                            ),
-                          )
-                        ],
-                      ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    RattingStart(restaurant.rating),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(
+                      restaurant.address,
+                      style: TextStyle(
+                          fontSize: 13.0, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(
+                      '0.2 million',
+                      style: TextStyle(
+                          fontSize: 13.0, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
-              ),
-            )
-          );
-      });
-      return Column(
-        children: restaurantList,
-      );
+              )
+            ],
+          ),
+        ),
+      ));
+    });
+    return Column(
+      children: restaurantList,
+    );
   }
 
   Widget build(BuildContext context) {
@@ -102,20 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: Icon(Icons.account_circle),
           iconSize: 30.0,
-          onPressed: () {
-          },
+          onPressed: () {},
         ),
         title: Text('Food delivery App'),
-        actions: <Widget> [
+        actions: <Widget>[
           FlatButton(
             child: Text(
               'Cart (${currentUser.cart.length})',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CartScreen(),
               ),
             ),
-            onPressed: () {},
           )
         ],
       ),
@@ -125,19 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0)
-                ),
-                hintText: 'Search for food',
-                prefixIcon: Icon(
-                  Icons.search,
-                  size: 30.0,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {}
-                )
-              ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  hintText: 'Search for food',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: 30.0,
+                  ),
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.clear), onPressed: () {})),
             ),
           ),
           RecentOrder(),
@@ -149,10 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   'Nearby Restaurants',
                   style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2
-                  ),
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2),
                 ),
               ),
               _buildRestaurants()
@@ -163,4 +154,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
